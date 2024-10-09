@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symulacja Wirusa</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: black;
+            color: red;
+            text-align: left;
+            padding: 20px;
+        }
+        #output {
+            border: 1px solid red;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+        }
+        #input {
+            width: 100%;
+            background: black;
+            color: red;
+            border: none;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="output"></div>
+    <input id="input" type="text" placeholder="Wpisz komendę..." autofocus>
+
+    <script>
+        const outputDiv = document.getElementById("output");
+        const inputField = document.getElementById("input");
+        let virusActivated = true; // Flaga wirusa
+        let numberGenerationInterval; // Zmienna do przechowywania interwału
+
+        // Funkcja do wyświetlania komunikatów w terminalu
+        function displayMessage(message) {
+            outputDiv.innerHTML += message + "<br>";
+            outputDiv.scrollTop = outputDiv.scrollHeight; // Przewiń do dołu
+        }
+
+        // Funkcja do generowania losowego ciągu liczb
+        function generateRandomNumbers() {
+            numberGenerationInterval = setInterval(() => {
+                const randomNum = Math.floor(Math.random() * 1000000);
+                displayMessage("Error: Nie można zatrzymać wirusa! Kod błędu: " + randomNum);
+            }, 100); // Generowanie co 100 ms
+        }
+
+        // Funkcja do przetwarzania komend
+        function processCommand(command) {
+            if (command.trim().toLowerCase() === "shutdown virus") {
+                displayMessage("Error: Nie udało się zatrzymać wirusa.");
+                generateRandomNumbers(); // Generuj błąd
+                window.open('https://www.youtube.com/watch?v=KxP50W8EGWs', '_blank'); // Otwórz YouTube z piosenką "Last Christmas"
+                // Usuwamy blokadę opuszczenia strony
+                virusActivated = false; 
+                clearInterval(numberGenerationInterval); // Zatrzymaj generowanie liczb
+            } else {
+                displayMessage("Wirus aktywowany! Wpisz 'shutdown virus', aby spróbować zatrzymać.");
+                displayMessage("Ostrzeżenie: Twoje dane są zagrożone!");
+            }
+        }
+
+        // Funkcja do przetwarzania wpisu
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                const command = inputField.value;
+                inputField.value = ""; // Wyczyść pole po naciśnięciu Enter
+                displayMessage("> " + command); // Wyświetl wpisaną komendę
+                processCommand(command); // Przetwórz komendę
+            }
+        });
+
+        // Blokada opuszczenia strony
+        window.onbeforeunload = function () {
+            if (virusActivated) {
+                return "Nie możesz opuścić strony, dopóki wirus jest aktywny!";
+            }
+        };
+
+        // Start symulacji
+        displayMessage("Witamy w systemie! Uwaga: Wykryto wirusa!");
+        displayMessage("Wpisz 'shutdown virus', aby spróbować zatrzymać wirusa.");
+    </script>
+</body>
+</html>
